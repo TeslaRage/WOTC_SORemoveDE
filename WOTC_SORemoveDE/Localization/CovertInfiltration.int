@@ -1,0 +1,7 @@
+[Activity_PrepCounterGHDE X2ActivityTemplate_CovertAction]
+strOverviewDescription=Investigate Dark Event
+
+[ActivityChain_CounterGHDE X2ActivityChainTemplate]
+strTitle="Remove Dark Event"
+strDescription="Smash infrastructure critical to ADVENT's operations against XCOM."
+strObjective="halt ADVENT's <font color='#E52E11'><XGParam:StrValue0/></font> project"
