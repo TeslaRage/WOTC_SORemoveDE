@@ -3,6 +3,7 @@ class X2EventListener_RemoveDE extends X2EventListener config (RemoveDarkEvent);
 var config bool bLog;
 var config int ChainSpawnLimit;
 var config array<name> arrBlacklistedDEs;
+var config int DefaultMaxDurationDays;
 
 static function array<X2DataTemplate> CreateTemplates()
 {
@@ -160,6 +161,22 @@ static function SpawnRemoveDarkEvents (XComGameState NewGameState)
 				`LOG("Removed" @ DarkEventState.GetMyTemplateName() @ "because according to Grim Horizon Fix, its not a permanent event", default.bLog, 'SORemoveDE');				
 				continue;
 			}
+		}		
+		
+		if (class'X2StrategyGameRulesetDataStructures'.static.DifferenceInDays(`STRATEGYRULES.GameTime, DarkEventState.StartDateTime) < DarkEventState.GetMyTemplate().MaxDurationDays 
+				&& DarkEventState.GetMyTemplate().MaxDurationDays > 0)
+		{			
+			DarkEventRefs.Remove(i, 1);
+			i--;
+			`LOG("Removed" @ DarkEventState.GetMyTemplateName() @ "because we want the player to suffer for a bit before allowing deactivation via chain", default.bLog, 'SORemoveDE');				
+			continue;
+		}
+		else if (class'X2StrategyGameRulesetDataStructures'.static.DifferenceInDays(`STRATEGYRULES.GameTime, DarkEventState.StartDateTime) < default.DefaultMaxDurationDays)
+		{
+			DarkEventRefs.Remove(i, 1);
+			i--;
+			`LOG("Removed" @ DarkEventState.GetMyTemplateName() @ "because we want the player to suffer for a bit before allowing deactivation via chain (0 MaxDurationDays)", default.bLog, 'SORemoveDE');				
+			continue;
 		}
 		
 		`LOG("Cleared:" @ DarkEventState.GetMyTemplateName(), default.bLog, 'SORemoveDE');		
